@@ -8,4 +8,6 @@ html(lang="en")
     body 
         h1 Following are the titles of given websites:
         ul 
-            li #{ address } - #{ title }
+            each addressElement in address
+                each title in title
+                    li #{ addressElement } - #{ title }
