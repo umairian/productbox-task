@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const http = require('follow-redirects').http;
-const url = require('url');
 const port = 3000;
 
 app.get('/I/want/title/', (req, res, next) => {
@@ -27,7 +26,6 @@ app.get('/I/want/title/', (req, res, next) => {
                 console.log(chunk);
                 
             });
-          
             // The whole response has been received. Print out the result.
             resp.on('end', () => {
                 const result = Buffer.concat(data).toString('utf-8');
@@ -37,10 +35,40 @@ app.get('/I/want/title/', (req, res, next) => {
 
                 return res.send(`<ul><li>${address} - ${title}</li></ul>`);
             });
-          
-          }).on("error", (err) => {
+        }).on("error", (err) => {
             console.log("Error: " + err.message);
-          });
+        });
+        } else {
+            let data2 = [];
+            const titlesArray = [];
+            address.forEach(element => {
+                http.get(element, (resp) => {
+            
+                    // A chunk of data has been received.
+                    resp.on('data', (chunk) => {
+                        data2.push(chunk);
+                        console.log(chunk);
+                        
+                    });
+                    // The whole response has been received. Print out the result.
+                    resp.on('end', () => {
+                        const result = Buffer.concat(data2).toString('utf-8');
+                        console.log(result);
+                        var title = result.split('<title>')[1].split('</title>')[0];
+                        console.log(title);
+
+                        titlesArray.push(title);
+                        if(address.length === titlesArray.length){
+                            console.log(titlesArray);
+                            return res.send(`<ul><li>${titlesArray}</li></ul>`);
+                        }
+                    });
+                }).on("error", (err) => {
+                    console.log("Error: " + err.message);
+                });
+            });
+
+            
         }
 });
 
