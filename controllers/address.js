@@ -43,49 +43,6 @@ module.exports = (req, res, next) => {
         }).catch(error => {
             console.log(error);
         });
-
-        // function fetchTitles(_callback) {
-        //     addressArray.forEach(element => {
-        //         axios.get(element).then(result => {
-        //             console.log('firstttt');
-        //             var title = result.data.split('<title>')[1].split('</title>')[0];
-        //             titlesArray.push(title);
-        //             console.log(titlesArray);
-        //         }).catch(error => {
-        //             console.log(error);
-        //             callback(null);
-        //         });
-        //     });
-        //     _callback();
-        // }
-
-        // fetchTitles(() => {
-        //     console.log('Second timeee!!!!!!!!');
-        //     res.render(path.join(__dirname, "../", "views", "addressMany.pug"), { address: address, title: titlesArray});
-            
-        // });
-
-        // async.waterfall([(callback) => {
-        //     addressArray.forEach(element => {
-        //         axios.get(element).then(result => {
-        //             var title = result.data.split('<title>')[1].split('</title>')[0];
-        //             titlesArray.push(title);
-        //             console.log(titlesArray);
-        //         }).catch(error => {
-        //             console.log(error);
-        //             callback(null);
-        //         });
-        //     }); 
-        //     callback(null, 'one');
-        // }, (arg1, callback) => {
-        //     console.log('SEcond time this bitch ' + titlesArray);
-        //     res.render(path.join(__dirname, "../", "views", "addressMany.pug"), { address: address, title: titlesArray});
-        //     callback(null, 'done');
-        // }], (error, result) => {
-        //     console.log(error);
-        //     console.log(result);
-        // });
-        
         
     }
 
