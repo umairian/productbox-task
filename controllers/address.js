@@ -1,11 +1,10 @@
 const path = require("path");
 const axios = require('axios');
-const async = require('async');
 
 module.exports = (req, res, next) => {
-    const address = req.query.address;
+    const address = req.query.address; // query addresses
     var addressArray = [];
-    if(!Array.isArray(address)) {
+    if(!Array.isArray(address)) { // Check whether address is array or not
         addressArray.push(address);
         console.log(addressArray);
     } else {
@@ -13,17 +12,13 @@ module.exports = (req, res, next) => {
         console.log(addressArray);
     }
 
-    if(addressArray.length == 1) {
+    if(addressArray.length == 1) { // In casw of single address
         axios.get(address).then(result => {
             var title = result.data.split('<title>')[1].split('</title>')[0];
             return res.render(path.join(__dirname, "../", "views", "address.pug"), { address: address, title: title});
         }).catch(error => {
             console.log('Error occured in fetching request ' + error);
-            return res.status(500).json({
-                status: false,
-                errorCode: 'server-error',
-                message: 'Request fetching failed'
-            });
+            return res.render(path.join(__dirname, "../", "views", "address.pug"), { address: address, title: 'Not Found'});
         });
     } else {
         const titlesArray = [];
@@ -31,19 +26,19 @@ module.exports = (req, res, next) => {
 
         addressArray.forEach(element => {
             promises.push(axios.get(element).then(result => {
-                console.log('firstttt');
+                console.log('Fetching titles');
                 var title = result.data.split('<title>')[1].split('</title>')[0];
-                titlesArray.push(title);
+                titlesArray.push([element, title]);
                 console.log(titlesArray);
             }).catch(error => {
                 console.log(error);
-                callback(null);
+                titlesArray.push([element, 'Not Found']);
             }));
         });
         
 
         Promise.all(promises).then(result => {
-            console.log('Second timeee!!!!!!!!');
+            console.log('Response function running');
             res.render(path.join(__dirname, "../", "views", "addressMany.pug"), { address: address, title: titlesArray});
         }).catch(error => {
             console.log(error);
